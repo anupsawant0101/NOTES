@@ -1,0 +1,116 @@
+Ansible
+--------------------------------------------------------------------------------------------------------------Lecture 30
+
+Ansible is a configuration management tool.
+To understand ansible we need to understand configuration  management.
+Configuration means each and every minute details of your machine.
+Management means adding editing and deleting some configurations.
+Configuration management is it done in the two way first one manual and second one is automatic.
+Manual
+In a manual way system administrator is doing all the configuration management this is a old way to do the configuration management it will requires lots of time.
+Automatic
+In the automatic way the system administrator is replaced by devops engineers. Configuration management is done by automatic way through some tools such as ansible, chef, puppet, and salf.
+How they devops engineers doing this.
+They are doing this with the help of IAC that means infrastructure as code.
+We create a file write lot of code in that file and the format of that file is yaml script. And that file we will execute in all the thousand machines and the infrastructure is created. Infrastructure means end result. We are converting code to infrastructure so we are calling iaC as a improstructure is a code.
+Advantages of IAC
+The first one is the versionable second one is repeatable third one is testable.
+These advantages we are getting in all the tools listed above but why ansible.
+Ansible is the one of the configuration tool.
+
+---------------------------------------------------------------------------------------------------------------------
+Lecture 31
+First create three ec2 instance
+Renam these instances
+Ansible server
+Ansible - Node1
+Ansible - Node2
+Go inside all the machines
+Rename all the ec2 machines
+Turn on multi execution mode
+sudo su -
+yum update -y
+Exit multi execution mode
+Install ansible only on server
+To install ansible we need to install some dependent packages. It is difficult to install all the packages so there is a shortcut to install all that packages which is epel repository. First we download that epel repository install epel repository. If you download and install that repository your machine will not understand that package because you have not updated your machine so to understand that package we need to update our machine.
+wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+ls
+yum install epel-release-latest-7.noarch.rpm -y
+yum update -y
+ansible --version
+Enter multi execution mode
+adduser ansadmin
+password ansadmin
+Now enter password for username ansadmin
+switch to user account
+su - ansadmin
+The user can do some basic operations but for installation purposes we need to have a super user.
+touch file1
+yum install tree -y
+Asks that you need to be super user to run this command.
+sudo yum install tree -y
+Asks for password enter and when we enter the password it we'll say that you are not having sudo  preivilages. Then how to get sudo preivilages.
+There is a file sudoers which can open only root user and the users entered in that file can get sudo preivilages.
+visudo
+Now the file will be opened we have to enter the user's username below the root in all the machines.
+ansadmin ALL=(ALL) NOPASSWD: ALL
+su - ansadmin
+ls
+sudo yum install tree –y
+exit
+Now we need to connect Node1 and Node2 to Server using SSH
+vi /etc/ssh/sshd_config
+Make password authentication no to yes and save then exit.
+service sshd reload
+su - ansadmin
+Now run command only for server to connect to node.
+ssh ansadmin@172.31.10.71
+Now enter it'll ask for password for users means node1
+Now we are in Node1
+touch file2
+ls
+rm -rf  file*
+ls
+exit
+Now we are back to the server and connecting to node2
+ssh ansadmin@172.31.4.215
+It'll ask for password of node2
+ls
+mkdir dir 1
+ls
+rm -rf  *
+ls
+exit
+Now we are back to the server
+
+Password less SSH ( Trust Relationship)
+We are going to do in only on a server we are not going to do from node to server.
+ssh-keygen
+ls -a
+Those both keys public and private keys are stored under the .ssh folder.
+cd .ssh/
+ls
+id_rsa and id_rsa.pub both are the private and public keya respectively.
+ssh-copy-id ansadmin@172.31.10.71
+The above command means copying public key contents to the node1 to directly.
+Once we enter it will ask for password for the last time we need to enter that password of node1.
+Now go to node1 and check whether the key is copied or not to check commands are below
+ls -a
+cd .ssh/
+ls
+cat authorised_keys
+Now do the same thing in a node2 also
+ssh-copy-id ansadmin@172.31.4.215
+Now present in enter the password for last time
+Now go to the notde2
+ls -a
+cd .ssh/
+ls
+cat authorized_keys
+Now go to the server
+cd ..
+ssh 172.31.10.71
+exit
+ssh 172.31.4.215
+exit
+
